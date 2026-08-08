@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 340" width="920" height="340" font-family="Inter,system-ui,sans-serif">
+<style>
+  .t{fill:#98A5BA;font-size:11.5px}
+  .tm{fill:#63718A;font-size:9.5px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em}
+  .lv{fill:#38BDF8;font-size:10px;font-family:'JetBrains Mono',monospace}
+  .iso{fill:none;stroke:#38BDF8;stroke-width:2;stroke-dasharray:900;stroke-dashoffset:900;animation:dr 6s ease-out infinite}
+  .isoX{fill:none;stroke:#38BDF8;stroke-width:1.6;stroke-dasharray:7 6;opacity:.42}
+  @keyframes dr{0%{stroke-dashoffset:900}45%,100%{stroke-dashoffset:0}}
+  .ar{stroke:#2DD4BF;stroke-width:1.6;opacity:0;animation:ap 6s ease-out infinite}
+  @keyframes ap{0%,50%{opacity:0}62%,95%{opacity:.85}100%{opacity:0}}
+  .hull{fill:none;stroke:#3B5578;stroke-width:1.2;stroke-dasharray:4 4}
+</style>
+<rect width="920" height="340" fill="#070A10"/>
+<g stroke="#131C29" stroke-width="1">
+  <path d="M0 40H920M0 80H920M0 120H920M0 160H920M0 200H920M0 240H920M0 280H920M0 320H920"/>
+  <path d="M40 0V340M80 0V340M120 0V340M160 0V340M200 0V340M240 0V340M280 0V340M320 0V340M360 0V340M400 0V340M440 0V340M480 0V340M520 0V340M560 0V340M600 0V340"/>
+</g>
+
+<text class="tm" x="28" y="28">CARTE PIÉZOMÉTRIQUE — ISOPIÈZES ET SENS D'ÉCOULEMENT</text>
+
+<defs><marker id="a" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0.5L6.5 3.5L0 6.5Z" fill="#2DD4BF"/></marker></defs>
+
+<path class="hull" d="M120 108L268 72L440 96L512 190L404 268L212 254L118 186Z"/>
+
+<g class="isoX">
+  <path d="M44 172C64 154 86 138 108 128"/><path d="M488 168C504 190 514 212 518 234"/>
+  <path d="M40 204C60 186 82 170 104 160"/><path d="M476 208C490 228 498 248 500 268"/>
+  <path d="M46 236C66 218 88 202 110 192"/><path d="M456 244C468 262 474 280 476 296"/>
+  <path d="M62 268C82 250 104 234 126 224"/><path d="M434 272C442 284 448 296 450 308"/>
+</g>
+
+<g>
+  <path class="iso" style="animation-delay:0s"     d="M108 128C170 92 260 82 348 96C412 106 458 132 488 168"/>
+  <path class="iso" style="animation-delay:.35s"   d="M104 160C168 130 262 122 348 138C410 150 452 176 476 208"/>
+  <path class="iso" style="animation-delay:.7s"    d="M110 192C174 168 264 162 344 180C400 192 436 216 456 244"/>
+  <path class="iso" style="animation-delay:1.05s"  d="M126 224C186 206 268 202 340 220C388 232 418 250 434 272"/>
+</g>
+
+<text class="lv" x="466" y="152">122 m</text>
+<text class="lv" x="452" y="192">120 m</text>
+<text class="lv" x="432" y="228">118 m</text>
+<text class="lv" x="410" y="256">116 m</text>
+
+<g class="ar" fill="none" marker-end="url(#a)">
+  <path d="M200 122L214 178" style="animation-delay:0s"/>
+  <path d="M288 106L296 168" style="animation-delay:.15s"/>
+  <path d="M372 118L364 180" style="animation-delay:.3s"/>
+  <path d="M448 156L428 212" style="animation-delay:.45s"/>
+  <path d="M236 186L246 240" style="animation-delay:.6s"/>
+  <path d="M330 194L326 250" style="animation-delay:.75s"/>
+</g>
+
+<g fill="#E8EEF7">
+  <circle cx="120" cy="108" r="4"/><circle cx="268" cy="72" r="4"/><circle cx="440" cy="96" r="4"/>
+  <circle cx="512" cy="190" r="4"/><circle cx="404" cy="268" r="4"/><circle cx="212" cy="254" r="4"/>
+  <circle cx="118" cy="186" r="4"/><circle cx="248" cy="146" r="4"/><circle cx="352" cy="160" r="4"/>
+  <circle cx="300" cy="216" r="4"/><circle cx="180" cy="200" r="4"/><circle cx="410" cy="184" r="4"/>
+</g>
+<g fill="none" stroke="#E8EEF7" stroke-width="1" opacity=".28">
+  <circle cx="120" cy="108" r="10"/><circle cx="440" cy="96" r="10"/><circle cx="404" cy="268" r="10"/>
+</g>
+
+<g transform="translate(640,54)">
+  <rect width="252" height="238" rx="10" fill="#0C111A" stroke="#1B2536"/>
+  <text class="tm" x="18" y="28">LÉGENDE</text>
+  <g transform="translate(18,52)">
+    <path d="M0 6H30" stroke="#38BDF8" stroke-width="2" fill="none"/>
+    <text class="t" x="42" y="10">Isopièze — interpolation</text>
+    <text class="tm" x="42" y="26" font-size="9">dans l'enveloppe des points</text>
+  </g>
+  <g transform="translate(18,100)">
+    <path d="M0 6H30" stroke="#38BDF8" stroke-width="1.6" stroke-dasharray="5 4" opacity=".5" fill="none"/>
+    <text class="t" x="42" y="10">Isopièze — extrapolation</text>
+    <text class="tm" x="42" y="26" font-size="9">signalée comme incertaine</text>
+  </g>
+  <g transform="translate(18,148)">
+    <path d="M0 6H26" stroke="#2DD4BF" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+    <text class="t" x="42" y="10">Sens d'écoulement</text>
+    <text class="tm" x="42" y="26" font-size="9">gradient de charge hydraulique</text>
+  </g>
+  <g transform="translate(18,196)">
+    <circle cx="14" cy="4" r="4" fill="#E8EEF7"/>
+    <text class="t" x="42" y="8">Point de mesure</text>
+  </g>
+</g>
+</svg>

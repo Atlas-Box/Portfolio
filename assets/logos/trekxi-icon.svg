@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="ig1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF"/>
+      <stop offset="100%" stop-color="#0D9488"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="224" fill="#0f1117"/>
+
+  <!-- Pin shape -->
+  <path d="M512 120 C680 120, 810 240, 810 400 C810 600, 512 900, 512 900 C512 900, 214 600, 214 400 C214 240, 344 120, 512 120Z"
+        fill="url(#ig1)" />
+
+  <!-- Inner dark circle -->
+  <circle cx="512" cy="380" r="240" fill="#0f1117"/>
+
+  <!-- Mountain -->
+  <path d="M300 560 L420 340 L484 434 L548 370 L700 560Z" fill="#1a2035"/>
+  <!-- Snow cap -->
+  <path d="M420 340 L452 388 L388 388Z" fill="#2DD4BF" opacity="0.6"/>
+
+  <!-- Ocean wave -->
+  <path d="M272 520 Q352 460, 432 520 Q512 580, 592 520 Q672 460, 752 520
+           L752 580 Q672 520, 592 580 Q512 640, 432 580 Q352 520, 272 580Z"
+        fill="#00BFA6" opacity="0.25"/>
+  <path d="M272 550 Q368 490, 464 550 Q560 610, 656 550 Q704 520, 752 550"
+        fill="none" stroke="#00BFA6" stroke-width="12" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Sun -->
+  <circle cx="608" cy="252" r="32" fill="#2DD4BF" opacity="0.8"/>
+  <!-- Sun rays -->
+  <line x1="608" y1="196" x2="608" y2="210" stroke="#2DD4BF" stroke-width="8" opacity="0.4" stroke-linecap="round"/>
+  <line x1="656" y1="220" x2="644" y2="232" stroke="#2DD4BF" stroke-width="8" opacity="0.4" stroke-linecap="round"/>
+  <line x1="560" y1="220" x2="572" y2="232" stroke="#2DD4BF" stroke-width="8" opacity="0.4" stroke-linecap="round"/>
+  <line x1="660" y1="256" x2="648" y2="256" stroke="#2DD4BF" stroke-width="6" opacity="0.3" stroke-linecap="round"/>
+</svg>

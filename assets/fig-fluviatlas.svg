@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 300" width="920" height="300" font-family="Inter,system-ui,sans-serif">
+<style>
+  .t{fill:#98A5BA;font-size:11px}
+  .th{fill:#E8EEF7;font-size:12.5px;font-weight:500}
+  .tm{fill:#63718A;font-size:9.5px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em}
+  .card{fill:#0C111A;stroke:#1B2536}
+  .flow{stroke:#2A3B57;stroke-width:1.5;fill:none;stroke-dasharray:4 5;animation:march 1.3s linear infinite}
+  @keyframes march{to{stroke-dashoffset:-18}}
+  .stem{stroke-dasharray:520;stroke-dashoffset:520;animation:dr 5.5s ease-out infinite}
+  .trib{stroke-dasharray:200;stroke-dashoffset:200;animation:dr2 5.5s ease-out infinite}
+  .bv{stroke-dasharray:1150;stroke-dashoffset:1150;animation:dr3 5.5s ease-out infinite}
+  @keyframes dr{0%,4%{stroke-dashoffset:520}34%,100%{stroke-dashoffset:0}}
+  @keyframes dr2{0%,30%{stroke-dashoffset:200}52%,100%{stroke-dashoffset:0}}
+  @keyframes dr3{0%,52%{stroke-dashoffset:1150}84%,100%{stroke-dashoffset:0}}
+  .lb{opacity:0;animation:fi 5.5s ease-in-out infinite}
+  @keyframes fi{0%,58%{opacity:0}72%,100%{opacity:1}}
+  .out{opacity:0;animation:fo 5.5s ease-out infinite}
+  @keyframes fo{0%,26%{opacity:0}36%,100%{opacity:1}}
+</style>
+<rect width="920" height="300" fill="#070A10"/>
+<g stroke="#131C29" stroke-width="1">
+  <path d="M0 40H920M0 80H920M0 120H920M0 160H920M0 200H920M0 240H920M0 280H920"/>
+  <path d="M40 0V300M80 0V300M120 0V300M160 0V300M200 0V300M240 0V300M280 0V300M320 0V300M360 0V300M400 0V300"/>
+</g>
+
+<text class="tm" x="28" y="32">1 · MNT COPERNICUS GLO-30 → BASSIN VERSANT</text>
+
+<defs><clipPath id="cc"><rect x="0" y="0" width="360" height="220" rx="10"/></clipPath></defs>
+
+<g transform="translate(28,46)">
+  <rect class="card" width="360" height="220" rx="10"/>
+  <g clip-path="url(#cc)">
+    <g fill="none" stroke="#18283D" stroke-width="1">
+      <path d="M-10 66C40 44 96 40 150 56C204 72 258 74 310 58C340 49 358 40 372 32"/>
+      <path d="M-10 100C44 76 104 72 160 88C216 104 270 104 322 88"/>
+      <path d="M-10 140C48 116 110 112 168 128C226 144 280 142 334 124"/>
+      <path d="M-10 184C52 160 118 154 178 170C238 186 292 182 348 162"/>
+      <path d="M-10 224C56 202 126 196 188 212C248 228 300 222 358 202"/>
+    </g>
+    <path class="bv" fill="none" stroke="#9B8CE8" stroke-width="1.9" stroke-dasharray="1150"
+      d="M44 34C96 16 164 22 212 38C260 54 300 48 328 76C350 98 342 134 320 158C298 182 248 196 198 190C148 184 108 198 76 180C42 161 26 122 30 86C32 60 38 42 44 34Z"/>
+    <g fill="none" stroke="#2DD4BF" stroke-width="1.4" opacity=".72" class="trib">
+      <path d="M62 96C92 96 122 92 152 82" style="animation-delay:0s"/>
+      <path d="M90 156C122 144 154 122 192 102" style="animation-delay:.12s"/>
+      <path d="M250 58C244 82 240 100 230 116" style="animation-delay:.24s"/>
+      <path d="M302 92C294 108 288 120 274 133" style="animation-delay:.36s"/>
+      <path d="M128 62C142 70 150 76 152 82" style="animation-delay:.48s"/>
+    </g>
+    <path class="stem" fill="none" stroke="#2DD4BF" stroke-width="2.6" stroke-linecap="round"
+      d="M92 48C120 72 152 84 190 100C228 116 268 130 328 152"/>
+    <g class="out">
+      <circle cx="328" cy="152" r="5.5" fill="#2DD4BF"/>
+      <circle cx="328" cy="152" r="13" fill="none" stroke="#2DD4BF" stroke-width="1" opacity=".4"/>
+      <text class="tm" x="240" y="186" fill="#2DD4BF">EXUTOIRE</text>
+    </g>
+    <text class="tm lb" x="20" y="26" fill="#9B8CE8">BASSIN VERSANT DÉLIMITÉ</text>
+  </g>
+</g>
+
+<g transform="translate(424,46)">
+  <text class="tm" x="0" y="-14">2 · CHAÎNE DE TRAITEMENT — MÉTHODOLOGIE ARCGIS HYDROLOGY</text>
+  <g>
+    <rect class="card" width="468" height="34" rx="8"/>
+    <circle cx="20" cy="17" r="5" fill="#3B82F6"/>
+    <text class="th" x="38" y="21">Reconditionnement AGREE</text>
+    <text class="t" x="226" y="21">Saunders 1999 · thalwegs OSM</text>
+  </g>
+  <path class="flow" d="M20 34V47"/>
+  <g transform="translate(0,47)">
+    <rect class="card" width="468" height="34" rx="8"/>
+    <circle cx="20" cy="17" r="5" fill="#3B82F6"/>
+    <text class="th" x="38" y="21">Breach depressions least-cost</text>
+    <text class="t" x="256" y="21">retenues et barrages</text>
+  </g>
+  <path class="flow" d="M20 81V94"/>
+  <g transform="translate(0,94)">
+    <rect class="card" width="468" height="34" rx="8"/>
+    <circle cx="20" cy="17" r="5" fill="#3B82F6"/>
+    <text class="th" x="38" y="21">Fill sinks</text>
+    <text class="t" x="122" y="21">comblement des cuvettes résiduelles</text>
+  </g>
+  <path class="flow" d="M20 128V141"/>
+  <g transform="translate(0,141)">
+    <rect class="card" width="468" height="34" rx="8"/>
+    <circle cx="20" cy="17" r="5" fill="#2DD4BF"/>
+    <text class="th" x="38" y="21">Flow direction D8 + accumulation</text>
+    <text class="t" x="290" y="21">pysheds</text>
+  </g>
+  <path class="flow" d="M20 175V188"/>
+  <g transform="translate(0,188)">
+    <rect class="card" width="468" height="34" rx="8"/>
+    <circle cx="20" cy="17" r="5" fill="#2DD4BF"/>
+    <text class="th" x="38" y="21">Réseau hydrographique + Strahler</text>
+    <text class="t" x="294" y="21">parcours en largeur</text>
+  </g>
+</g>
+</svg>
