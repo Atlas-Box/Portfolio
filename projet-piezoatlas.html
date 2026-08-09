@@ -70,8 +70,13 @@ margin-bottom:34px;min-height:520px;display:flex;align-items:flex-end;isolation:
 .car{position:absolute;inset:0;z-index:0;overflow:hidden}
 .car-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.22,.7,.3,1);will-change:transform}
 .car-s{flex:0 0 50%;height:100%;padding:0 1px;box-sizing:border-box}
+.car[data-per="4"] .car-s{flex-basis:25%}
+.car[data-per="3"] .car-s{flex-basis:33.3333%}
 .car-s img{width:100%;height:100%;object-fit:cover;object-position:center top;
 filter:saturate(.95) contrast(1.02);opacity:.9}
+/* écrans mobiles : la capture entière, jamais rognée */
+.car.contain .car-s{padding:26px 10px 0}
+.car.contain .car-s img{object-fit:contain;object-position:center top;opacity:.96;filter:none}
 .car-b{position:absolute;top:50%;transform:translateY(-50%);z-index:4;
 width:48px;height:48px;border-radius:50%;border:1px solid var(--line-2);
 background:color-mix(in srgb,var(--bg) 66%,transparent);backdrop-filter:blur(10px);
@@ -81,7 +86,9 @@ cursor:pointer;display:grid;place-items:center;opacity:.6;transition:.25s}
 background:color-mix(in srgb,var(--bg) 84%,transparent)}
 .car-b:focus-visible{outline:2px solid var(--ac);outline-offset:3px;opacity:1}
 .car-b.prev{left:20px}.car-b.next{right:20px}
-@media(max-width:700px){.car-s{flex:0 0 100%}.car-b{width:40px;height:40px;font-size:22px}
+@media(max-width:980px){.car[data-per="4"] .car-s{flex-basis:50%}}
+@media(max-width:700px){.car-s,.car[data-per="4"] .car-s,.car[data-per="3"] .car-s{flex-basis:100%}
+.car-b{width:40px;height:40px;font-size:22px}
 .car-b.prev{left:10px}.car-b.next{right:10px}}
 .pbanner::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
 background:linear-gradient(180deg,
@@ -349,7 +356,7 @@ body{--ac:#38BDF8}</style>
 <button class="burger" onclick="document.getElementById('navlinks').classList.toggle('open')" aria-label="Menu">☰</button>
 </div></nav>
 <header class="phead shot-bg">
-<div class="car"><div class="car-track"><div class="car-s"><img data-img="pa2" alt=""></div><div class="car-s"><img data-img="pa4" alt=""></div><div class="car-s"><img data-img="pa1" alt=""></div><div class="car-s"><img data-img="pa3" alt=""></div></div></div><button class="car-b prev" type="button" aria-label="Captures précédentes">&#8249;</button><button class="car-b next" type="button" aria-label="Captures suivantes">&#8250;</button>
+<div class="car" data-per="2"><div class="car-track"><div class="car-s"><img data-img="pa2" alt=""></div><div class="car-s"><img data-img="pa4" alt=""></div><div class="car-s"><img data-img="pa1" alt=""></div><div class="car-s"><img data-img="pa3" alt=""></div></div></div><button class="car-b prev" type="button" aria-label="Captures précédentes">&#8249;</button><button class="car-b next" type="button" aria-label="Captures suivantes">&#8250;</button>
 <div class="wrap">
 <a href="index.html#projets" class="back" data-i18n="bk">← TOUTES LES RÉALISATIONS</a>
 <div class="phead-in">
@@ -544,34 +551,52 @@ document.querySelectorAll('img[data-img]').forEach(function(e){
   if (d) e.src = d;
 });
 
-/* Carrousel : deux captures visibles à la fois sur écran large,
-   une seule en dessous de 700 px. Le pas est déduit de la largeur
-   réelle d'une diapositive, donc il suit le point de rupture CSS. */
+/* Carrousel circulaire. La bande de captures est dupliquée : en fin de
+   liste on continue sur la copie, puis on revient au début sans
+   transition. Le défilement paraît donc continu, chaque capture passe
+   à son tour et aucune n'est sautée. */
 document.querySelectorAll('.car').forEach(function(car){
   var track = car.querySelector('.car-track');
   var host  = car.parentElement;
-  var n = track.children.length, i = 0;
+  var n = track.children.length;
+  if (!n) return;
+  Array.prototype.slice.call(track.children).forEach(function(s){
+    track.appendChild(s.cloneNode(true));
+  });
+  var prev = host.querySelector('.car-b.prev'), next = host.querySelector('.car-b.next');
+  var i = 0, busy = false;
+  var EASE = 'transform .5s cubic-bezier(.22,.7,.3,1)';
+
   function per(){
     var w = track.children[0].offsetWidth;
     return w ? Math.max(1, Math.round(car.clientWidth / w)) : 1;
   }
-  function apply(){
-    var p = per(), max = Math.max(0, n - p);
-    if (i > max) i = max;
-    track.style.transform = 'translateX(-' + (i * (100 / p)) + '%)';
+  function step(){ return 100 / per(); }
+  function place(anim){
+    track.style.transition = anim ? EASE : 'none';
+    track.style.transform = 'translateX(-' + (i * step()) + '%)';
+  }
+  function arrows(){
+    var show = n > per();
+    if (prev) prev.style.display = show ? '' : 'none';
+    if (next) next.style.display = show ? '' : 'none';
+    return show;
   }
   function go(d){
-    var p = per(), max = Math.max(0, n - p);
-    i = i + d;
-    if (i < 0) i = max;
-    if (i > max) i = 0;
-    apply();
+    if (busy || !arrows()) return;
+    busy = true;
+    if (d < 0 && i === 0) { i = n; place(false); void track.offsetWidth; }
+    i += d;
+    place(true);
   }
-  var prev = host.querySelector('.car-b.prev'), next = host.querySelector('.car-b.next');
+  track.addEventListener('transitionend', function(){
+    busy = false;
+    if (i >= n) { i -= n; place(false); }
+  });
   if (prev) prev.addEventListener('click', function(e){ e.preventDefault(); go(-1); });
   if (next) next.addEventListener('click', function(e){ e.preventDefault(); go(1); });
-  addEventListener('resize', apply, {passive:true});
-  apply();
+  addEventListener('resize', function(){ arrows(); place(false); }, {passive:true});
+  arrows(); place(false);
 });
 
 const I18N={"nav1":"Expertise","nav2":"Work","nav3":"Toolbox","nav4":"Background","nav5":"Contact","f1":"Designed and built end to end","bk":"← ALL WORK","pv":"← PREVIOUS PROJECT","nx":"NEXT PROJECT →","ai0":"AI-ASSISTED DEVELOPMENT","ai1":"Building solo, at the pace of a team","ai2":"This software was designed and built solo, with large language models as a constant copilot. <strong>The domain expertise stays mine: it is what decides whether an answer is right.</strong> AI speeds up the implementation, never the hydraulic judgement.","ai3h":"Claude Code","ai3d":"Pair development with the agent: design, implementation, code review, large-scale refactoring","ai4h":"Model Context Protocol","ai4d":"Project tools and data exposed to the model in a standardised way, so it works on the real context","ai5h":"Verification agents","ai5d":"Security audits and test campaigns run by dedicated agents, alongside development","ai6h":"Living documentation","ai6d":"Project status, technical decisions and a session log kept continuously up to date","kick":"Piezometric mapping and animation of subsurface hydraulic behaviour","q0":"WHAT THE SOFTWARE DOES","q1":"Four pillars, from measurement point to animated section","q2h":"Map the piezometric surface","q2d":"From levels measured in boreholes, the software rebuilds the water table surface and draws the contours with flow direction.","q3h":"Pick the method that fits the data","q3d":"Five interpolation methods, selected automatically according to how many points are available — or forced by the user.","q4h":"Animate subsurface hydraulic behaviour","q4d":"Vertical section and dynamic water level through time: the drawdown cone forms and recovers in front of the user.","q5h":"Carry through to well design","q5d":"Pumping test interpretation, geological log and technical borehole section, through to screen sizing.","e13":"DEMONSTRATION","e14":"The software in motion","v1":"<b>From measurement point to animated section</b>Importing levels, choosing the interpolation method, drawing the contours, then animating the aquifer behaviour.","e1":"CARDINAL RULE","e2":"Never map where nobody measured","r1":"SCIENTIFIC CONSTRAINT","r2":"Contours are solid inside the convex hull of the points and dashed where they extrapolate. A map claiming knowledge beyond the data is false information — and false information delivered to a client kills the product.","f1c":"Contours, level labels and flow arrows perpendicular to the gradient","e3":"INTERPOLATION","e4":"The method adapts to the data available","n1":"Kriging on eight points is meaningless. Automatic mode selects by valid point count; the user can force a method, with an explicit warning. <strong>The active method, point count and RMSE stay on screen at all times.</strong>","f2c":"Adaptive method selection based on valid point count","e5":"PROFILE AND RELIEF","e6":"The vertical section, drawn with one line on the map","f3c":"2D profile: natural terrain sampled on the DEM, water table surface and flow direction","t1h":"Pumping tests","t1d":"Test interpretation, automatic fitting and graphical diagnostics","t2h":"Well design","t2d":"Geological log, technical borehole section, screen sizing","t3h":"Expert editing","t3d":"Hand-redrawn contours take authority across every view","t4h":"Report-ready exports","t4d":"Shapefile, GeoTIFF, PNG, GeoJSON, PDF","e7":"STACK","e10":"INTERFACE","e11":"The software running","e12":"Click a screenshot to enlarge.","g-pa1":"<b>Home screen</b><i>Three modules: piezometric mapping, pumping tests, well design</i>","g-pa2":"<b>Piezometric map</b><i>Twenty measurement points interpolated, contours bounded to the data envelope</i>","g-pa3":"<b>Pumping test interpretation</b><i>Automatic fitting, drawdown and discharge curves</i>","g-pa4":"<b>Animated drawdown cone section</b><i>Dynamic water level through time, overlaid on the geological log</i>"};

@@ -70,8 +70,13 @@ margin-bottom:34px;min-height:520px;display:flex;align-items:flex-end;isolation:
 .car{position:absolute;inset:0;z-index:0;overflow:hidden}
 .car-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.22,.7,.3,1);will-change:transform}
 .car-s{flex:0 0 50%;height:100%;padding:0 1px;box-sizing:border-box}
+.car[data-per="4"] .car-s{flex-basis:25%}
+.car[data-per="3"] .car-s{flex-basis:33.3333%}
 .car-s img{width:100%;height:100%;object-fit:cover;object-position:center top;
 filter:saturate(.95) contrast(1.02);opacity:.9}
+/* écrans mobiles : la capture entière, jamais rognée */
+.car.contain .car-s{padding:26px 10px 0}
+.car.contain .car-s img{object-fit:contain;object-position:center top;opacity:.96;filter:none}
 .car-b{position:absolute;top:50%;transform:translateY(-50%);z-index:4;
 width:48px;height:48px;border-radius:50%;border:1px solid var(--line-2);
 background:color-mix(in srgb,var(--bg) 66%,transparent);backdrop-filter:blur(10px);
@@ -81,7 +86,9 @@ cursor:pointer;display:grid;place-items:center;opacity:.6;transition:.25s}
 background:color-mix(in srgb,var(--bg) 84%,transparent)}
 .car-b:focus-visible{outline:2px solid var(--ac);outline-offset:3px;opacity:1}
 .car-b.prev{left:20px}.car-b.next{right:20px}
-@media(max-width:700px){.car-s{flex:0 0 100%}.car-b{width:40px;height:40px;font-size:22px}
+@media(max-width:980px){.car[data-per="4"] .car-s{flex-basis:50%}}
+@media(max-width:700px){.car-s,.car[data-per="4"] .car-s,.car[data-per="3"] .car-s{flex-basis:100%}
+.car-b{width:40px;height:40px;font-size:22px}
 .car-b.prev{left:10px}.car-b.next{right:10px}}
 .pbanner::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
 background:linear-gradient(180deg,
@@ -528,7 +535,7 @@ background:rgba(155,140,232,.1);color:var(--violet);white-space:nowrap}
 
 <section id="projets" class="wrap">
 <div class="pbanner rv">
-<div class="car"><div class="car-track"><div class="car-s"><img data-img="ab1" alt=""></div><div class="car-s"><img data-img="fa1" alt=""></div><div class="car-s"><img data-img="pa2" alt=""></div><div class="car-s"><img data-img="fa3" alt=""></div></div></div><button class="car-b prev" type="button" aria-label="Captures précédentes">&#8249;</button><button class="car-b next" type="button" aria-label="Captures suivantes">&#8250;</button>
+<div class="car" data-per="2"><div class="car-track"><div class="car-s"><img data-img="ab1" alt=""></div><div class="car-s"><img data-img="fa1" alt=""></div><div class="car-s"><img data-img="pa2" alt=""></div><div class="car-s"><img data-img="fa3" alt=""></div></div></div><button class="car-b prev" type="button" aria-label="Captures précédentes">&#8249;</button><button class="car-b next" type="button" aria-label="Captures suivantes">&#8250;</button>
 <div class="pb-txt">
 <div class="eyebrow" data-i18n="p0">RÉALISATIONS</div>
 <h2 data-i18n="p1">Trois logiciels professionnels, un projet personnel</h2>
@@ -652,34 +659,52 @@ document.querySelectorAll('img[data-img]').forEach(function(e){
   if (d) e.src = d;
 });
 
-/* Carrousel : deux captures visibles à la fois sur écran large,
-   une seule en dessous de 700 px. Le pas est déduit de la largeur
-   réelle d'une diapositive, donc il suit le point de rupture CSS. */
+/* Carrousel circulaire. La bande de captures est dupliquée : en fin de
+   liste on continue sur la copie, puis on revient au début sans
+   transition. Le défilement paraît donc continu, chaque capture passe
+   à son tour et aucune n'est sautée. */
 document.querySelectorAll('.car').forEach(function(car){
   var track = car.querySelector('.car-track');
   var host  = car.parentElement;
-  var n = track.children.length, i = 0;
+  var n = track.children.length;
+  if (!n) return;
+  Array.prototype.slice.call(track.children).forEach(function(s){
+    track.appendChild(s.cloneNode(true));
+  });
+  var prev = host.querySelector('.car-b.prev'), next = host.querySelector('.car-b.next');
+  var i = 0, busy = false;
+  var EASE = 'transform .5s cubic-bezier(.22,.7,.3,1)';
+
   function per(){
     var w = track.children[0].offsetWidth;
     return w ? Math.max(1, Math.round(car.clientWidth / w)) : 1;
   }
-  function apply(){
-    var p = per(), max = Math.max(0, n - p);
-    if (i > max) i = max;
-    track.style.transform = 'translateX(-' + (i * (100 / p)) + '%)';
+  function step(){ return 100 / per(); }
+  function place(anim){
+    track.style.transition = anim ? EASE : 'none';
+    track.style.transform = 'translateX(-' + (i * step()) + '%)';
+  }
+  function arrows(){
+    var show = n > per();
+    if (prev) prev.style.display = show ? '' : 'none';
+    if (next) next.style.display = show ? '' : 'none';
+    return show;
   }
   function go(d){
-    var p = per(), max = Math.max(0, n - p);
-    i = i + d;
-    if (i < 0) i = max;
-    if (i > max) i = 0;
-    apply();
+    if (busy || !arrows()) return;
+    busy = true;
+    if (d < 0 && i === 0) { i = n; place(false); void track.offsetWidth; }
+    i += d;
+    place(true);
   }
-  var prev = host.querySelector('.car-b.prev'), next = host.querySelector('.car-b.next');
+  track.addEventListener('transitionend', function(){
+    busy = false;
+    if (i >= n) { i -= n; place(false); }
+  });
   if (prev) prev.addEventListener('click', function(e){ e.preventDefault(); go(-1); });
   if (next) next.addEventListener('click', function(e){ e.preventDefault(); go(1); });
-  addEventListener('resize', apply, {passive:true});
-  apply();
+  addEventListener('resize', function(){ arrows(); place(false); }, {passive:true});
+  arrows(); place(false);
 });
 
 const I18N={"nav1":"Expertise","nav2":"Work","nav3":"Toolbox","nav4":"Background","nav5":"Contact","f1":"Designed and built end to end","htag":"Bordeaux · France — open to opportunities","hrole":"Water resources engineer<br><b>modelling, mapping and artificial intelligence</b>","hlede":"Water-resources specialist, passionate about bringing artificial intelligence into environmental engineering. This portfolio presents my skills and achievements: <strong>three professional software products and one personal project, designed and shipped</strong>.","hb1":"See the work →","hb2":"Download CV","hm1":"◆ Water resources engineer","hm2":"◆ Formerly Ginger Burgeap","hm3":"◆ French native · English fluent","e0":"WHAT I DO","e1":"A dual technical profile","e2":"Domain expertise without tooling is slow. Tooling without domain expertise produces wrong answers.","x1t":"Hydraulic modelling","x1d":"Drinking-water and sewerage networks, surface flows and groundwater: building models and simulating scenarios — floods, drawdown, runoff.","x2t":"Sizing &amp; sanitation","x2d":"Sizing of sewerage networks and treatment facilities.","x3t":"Mapping &amp; geomatics","x3d":"Spatial analysis, DEM processing, remote sensing, coordinate systems, cartographic production.","x4t":"Development &amp; automation","x4d":"Desktop, web and mobile applications, ETL pipelines over public APIs, packaging and distribution.","p0":"WORK","p1":"Three professional products, one personal project","p2":"The first three came out of problems I hit in consulting. The last one is a personal project, outside my professional work. Click through for the detail.","ab-c":"Automated extraction of French public environmental data: a polygon drawn on the map, data cross-referenced and exported automatically.","ab-k1":"AUTOMATED","ab-k2":"PER STUDY","ab-k3":"AI-ASSISTED BUILD","fa-c":"Watershed delineation and hydrological cartography: from downloading the elevation model to exporting hydrological parameters.","fa-k1":"DOWNLOADED AUTOMATICALLY","fa-k2":"DELINEATED AND MAPPED","fa-k3":"AI-ASSISTED BUILD","pa-c":"Multi-method piezometric mapping and animation of subsurface hydraulic behaviour, through to well design.","pa-k1":"PROFESSIONAL MODULES","pa-k2":"INTERPOLATION METHODS","pa-k3":"AI-ASSISTED BUILD","tx":"Personal project","tx-c":"Mobile app for discovering places and itineraries, built out of a passion for travel, outside my professional work. Live on the App Store.","tx-k1":"SHIPPED","tx-k2":"PLATFORMS","tx-k3":"BILINGUAL","go":"Explore the project →","t0":"TOOLBOX","t1":"What I work with","t-a":"Modelling","t-b":"GIS &amp; remote sensing","t-c":"Programming","t-d":"Data &amp; computation","t-e":"Applications","t-f":"Delivery","t-g":"Artificial intelligence","c0":"BACKGROUND","c1":"From the field to the code","c1a":"FROM THE FIELD TO THE CODE","c1b":"EDUCATION","c1c":"FIRST RESEARCH EXPERIENCE","c3d":"OCT 2023 — MAY 2026 · SAINT-ÉTIENNE-DU-ROUVRAY","c3t":"Water resources engineer","c3p":"<b>Water resource studies and management:</b> leading studies, drafting master plans, regulatory filings and environmental assessments.<br><b>Spatial analysis and modelling:</b> building numerical models, working with GIS data and simulating scenarios for sustainable water management.<br><b>R&amp;D and data science:</b> Python development — automated ETL of time series, large-scale data processing and optimisation of engineering computations.","c4d":"2021 — 2023 · MONT-SAINT-AIGNAN","c4t":"MSc Environmental Management — resources and environmental risk","c4o":"University of Rouen Normandy","c4p":"Modelling, hydraulics, water resources, geographic information systems.","c5d":"MAY — JUL 2022 · MONT-SAINT-AIGNAN","c5t":"Research internship — surface water quality and remote sensing","c5o":"M2C Laboratory · University of Rouen Normandy","c5p":"<b>Literature review and synthesis:</b> in-depth state of the art on surface water quality dynamics and the contribution of remote sensing.<br><b>Data collection and international fieldwork:</b> measurement campaigns and dataset construction.<br><b>Laboratory work:</b> analyses within the M2C laboratory, spatiotemporal processing in QGIS and Python, pollutant mapping and chlorophyll monitoring from satellite imagery.","c6d":"JAN — JUL 2019 · AGADIR, MOROCCO","c6t":"Assistant hydraulic engineer","c6p":"Sizing of sewerage networks and reed-bed treatment plants. Project's environmental impact assessment.","cf0":"CONTINUING EDUCATION — ARTIFICIAL INTELLIGENCE","cf1":"Learning how the models work, not just using them","cf2":"Four courses taken alongside engineering work, focused on building systems that reason and act on real data.","cf3t":"LLM Course","cf3d":"Large language model fundamentals: architecture, training, fine-tuning, inference","cf4t":"The Context Course","cf4d":"Context engineering: what a model actually receives and how to structure it","cf5t":"Model Context Protocol — MCP Course","cf5d":"Exposing data, tools and computation to a model in a standardised, secure way","cf6t":"Agents Course","cf6d":"Building autonomous agents: reasoning loops, tool calling, evaluation","cfp":"In progress","cfp2":"In progress","cfp3":"In progress","cfp4":"In progress","k0":"CONTACT","k1":"Let's talk","k2":"A question about my profile, an opportunity to discuss: I reply to every message.","k3":"SCAN TO SHARE","nl1":"WORK","nl1s":"4 products shipped","nl2":"EXPERTISE","nl2s":"modelling · GIS · code","nl3":"TOOLBOX","nl3s":"the full kit","nl4":"BACKGROUND","nl4s":"from field to code","nl5":"CONTACT","nl5s":"Bordeaux · France","nl6":"CV ↓ PDF","nlh":"Click a layer"};

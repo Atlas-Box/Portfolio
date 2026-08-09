@@ -70,8 +70,13 @@ margin-bottom:34px;min-height:520px;display:flex;align-items:flex-end;isolation:
 .car{position:absolute;inset:0;z-index:0;overflow:hidden}
 .car-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.22,.7,.3,1);will-change:transform}
 .car-s{flex:0 0 50%;height:100%;padding:0 1px;box-sizing:border-box}
+.car[data-per="4"] .car-s{flex-basis:25%}
+.car[data-per="3"] .car-s{flex-basis:33.3333%}
 .car-s img{width:100%;height:100%;object-fit:cover;object-position:center top;
 filter:saturate(.95) contrast(1.02);opacity:.9}
+/* écrans mobiles : la capture entière, jamais rognée */
+.car.contain .car-s{padding:26px 10px 0}
+.car.contain .car-s img{object-fit:contain;object-position:center top;opacity:.96;filter:none}
 .car-b{position:absolute;top:50%;transform:translateY(-50%);z-index:4;
 width:48px;height:48px;border-radius:50%;border:1px solid var(--line-2);
 background:color-mix(in srgb,var(--bg) 66%,transparent);backdrop-filter:blur(10px);
@@ -81,7 +86,9 @@ cursor:pointer;display:grid;place-items:center;opacity:.6;transition:.25s}
 background:color-mix(in srgb,var(--bg) 84%,transparent)}
 .car-b:focus-visible{outline:2px solid var(--ac);outline-offset:3px;opacity:1}
 .car-b.prev{left:20px}.car-b.next{right:20px}
-@media(max-width:700px){.car-s{flex:0 0 100%}.car-b{width:40px;height:40px;font-size:22px}
+@media(max-width:980px){.car[data-per="4"] .car-s{flex-basis:50%}}
+@media(max-width:700px){.car-s,.car[data-per="4"] .car-s,.car[data-per="3"] .car-s{flex-basis:100%}
+.car-b{width:40px;height:40px;font-size:22px}
 .car-b.prev{left:10px}.car-b.next{right:10px}}
 .pbanner::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
 background:linear-gradient(180deg,
@@ -382,7 +389,7 @@ addEventListener('DOMContentLoaded',()=>document.querySelectorAll('.tg').forEach
 <button class="burger" onclick="document.getElementById('navlinks').classList.toggle('open')" aria-label="Menu">☰</button>
 </div></nav>
 <header class="phead shot-bg">
-<div class="car"><div class="car-track"><div class="car-s"><img data-img="fa1" alt=""></div><div class="car-s"><img data-img="fa2" alt=""></div><div class="car-s"><img data-img="fa3" alt=""></div><div class="car-s"><img data-img="fa4" alt=""></div></div></div><button class="car-b prev" type="button" aria-label="Captures précédentes">&#8249;</button><button class="car-b next" type="button" aria-label="Captures suivantes">&#8250;</button>
+<div class="car" data-per="2"><div class="car-track"><div class="car-s"><img data-img="fa1" alt=""></div><div class="car-s"><img data-img="fa2" alt=""></div><div class="car-s"><img data-img="fa3" alt=""></div><div class="car-s"><img data-img="fa4" alt=""></div></div></div><button class="car-b prev" type="button" aria-label="Captures précédentes">&#8249;</button><button class="car-b next" type="button" aria-label="Captures suivantes">&#8250;</button>
 <div class="wrap">
 <a href="index.html#projets" class="back" data-i18n="bk">← TOUTES LES RÉALISATIONS</a>
 <div class="phead-in">
@@ -391,8 +398,8 @@ addEventListener('DOMContentLoaded',()=>document.querySelectorAll('.tg').forEach
 <p class="kick" data-i18n="kick">Délimitation de bassins versants et cartographie hydrologique : du modèle de terrain aux paramètres exportés</p></div>
 </div></div></header><section class="wrap" style="padding:52px 0 0">
 <div class="rv"><div class="eyebrow" data-i18n="q0">CE QUE PERMET LE LOGICIEL</div>
-<h2 data-i18n="q1">Cinq piliers, de la donnée brute au livrable</h2></div>
-<div class="plrs rv"><div class="plr"><span class="pn">01</span><div><div class="pt" data-i18n="q2h">Récupérer le modèle de terrain</div><div class="pd" data-i18n="q2d">Téléchargement automatique du MNT sur l'emprise choisie — HydroSHEDS pour un relief déjà conditionné pour l'hydrologie, Copernicus 30 m pour la finesse du calcul.</div></div></div><div class="plr"><span class="pn">02</span><div><div class="pt" data-i18n="q3h">Délimiter le bassin versant</div><div class="pd" data-i18n="q3d">Un clic sur l'exutoire suffit : le logiciel remonte la ligne de partage des eaux et referme le contour du bassin.</div></div></div><div class="plr"><span class="pn">03</span><div><div class="pt" data-i18n="q4h">Cartographier par le calcul spatial</div><div class="pd" data-i18n="q4d">Altitude, pente, hypsométrie, réseau hydrographique ordonné, indices de ruissellement et d'érosion — chaque carte est calculée, pas dessinée.</div></div></div><div class="plr"><span class="pn">04</span><div><div class="pt" data-i18n="q5h">Calculer les paramètres hydrologiques</div><div class="pd" data-i18n="q5d">Morphométrie du bassin, temps de concentration, débits de pointe et hydrogramme de crue, avec les formules du métier.</div></div></div><div class="plr"><span class="pn">05</span><div><div class="pt" data-i18n="q6h">Exporter vers la chaîne de production</div><div class="pd" data-i18n="q6d">Shapefile, GeoTIFF, Excel et rapport PDF : les résultats repartent directement dans le SIG ou dans le dossier d'étude.</div></div></div></div>
+<h2 data-i18n="q1">Quatre piliers, de la donnée brute au livrable</h2></div>
+<div class="plrs rv"><div class="plr"><span class="pn">01</span><div><div class="pt" data-i18n="q2h">Récupérer le modèle de terrain</div><div class="pd" data-i18n="q2d">Téléchargement automatique du MNT sur l'emprise choisie — HydroSHEDS pour un relief déjà conditionné pour l'hydrologie, Copernicus 30 m pour la finesse du calcul.</div></div></div><div class="plr"><span class="pn">02</span><div><div class="pt" data-i18n="q3h">Délimiter le bassin versant</div><div class="pd" data-i18n="q3d">Un clic sur l'exutoire suffit : le logiciel remonte la ligne de partage des eaux et referme le contour du bassin.</div></div></div><div class="plr"><span class="pn">03</span><div><div class="pt" data-i18n="q4h">Cartographier par le calcul spatial</div><div class="pd" data-i18n="q4d">Altitude, pente, hypsométrie, réseau hydrographique ordonné, indices de ruissellement et d'érosion — chaque carte est calculée, pas dessinée.</div></div></div><div class="plr"><span class="pn">04</span><div><div class="pt" data-i18n="q5h">Calculer et exporter les paramètres</div><div class="pd" data-i18n="q5d">Morphométrie, temps de concentration, débits de pointe et hydrogramme de crue, exportables en Shapefile, GeoTIFF, Excel et rapport PDF.</div></div></div></div>
 </section>
 
 <section class="wrap" style="padding:64px 0 0">
@@ -649,37 +656,55 @@ document.querySelectorAll('img[data-img]').forEach(function(e){
   if (d) e.src = d;
 });
 
-/* Carrousel : deux captures visibles à la fois sur écran large,
-   une seule en dessous de 700 px. Le pas est déduit de la largeur
-   réelle d'une diapositive, donc il suit le point de rupture CSS. */
+/* Carrousel circulaire. La bande de captures est dupliquée : en fin de
+   liste on continue sur la copie, puis on revient au début sans
+   transition. Le défilement paraît donc continu, chaque capture passe
+   à son tour et aucune n'est sautée. */
 document.querySelectorAll('.car').forEach(function(car){
   var track = car.querySelector('.car-track');
   var host  = car.parentElement;
-  var n = track.children.length, i = 0;
+  var n = track.children.length;
+  if (!n) return;
+  Array.prototype.slice.call(track.children).forEach(function(s){
+    track.appendChild(s.cloneNode(true));
+  });
+  var prev = host.querySelector('.car-b.prev'), next = host.querySelector('.car-b.next');
+  var i = 0, busy = false;
+  var EASE = 'transform .5s cubic-bezier(.22,.7,.3,1)';
+
   function per(){
     var w = track.children[0].offsetWidth;
     return w ? Math.max(1, Math.round(car.clientWidth / w)) : 1;
   }
-  function apply(){
-    var p = per(), max = Math.max(0, n - p);
-    if (i > max) i = max;
-    track.style.transform = 'translateX(-' + (i * (100 / p)) + '%)';
+  function step(){ return 100 / per(); }
+  function place(anim){
+    track.style.transition = anim ? EASE : 'none';
+    track.style.transform = 'translateX(-' + (i * step()) + '%)';
+  }
+  function arrows(){
+    var show = n > per();
+    if (prev) prev.style.display = show ? '' : 'none';
+    if (next) next.style.display = show ? '' : 'none';
+    return show;
   }
   function go(d){
-    var p = per(), max = Math.max(0, n - p);
-    i = i + d;
-    if (i < 0) i = max;
-    if (i > max) i = 0;
-    apply();
+    if (busy || !arrows()) return;
+    busy = true;
+    if (d < 0 && i === 0) { i = n; place(false); void track.offsetWidth; }
+    i += d;
+    place(true);
   }
-  var prev = host.querySelector('.car-b.prev'), next = host.querySelector('.car-b.next');
+  track.addEventListener('transitionend', function(){
+    busy = false;
+    if (i >= n) { i -= n; place(false); }
+  });
   if (prev) prev.addEventListener('click', function(e){ e.preventDefault(); go(-1); });
   if (next) next.addEventListener('click', function(e){ e.preventDefault(); go(1); });
-  addEventListener('resize', apply, {passive:true});
-  apply();
+  addEventListener('resize', function(){ arrows(); place(false); }, {passive:true});
+  arrows(); place(false);
 });
 
-const I18N={"nav1":"Expertise","nav2":"Work","nav3":"Toolbox","nav4":"Background","nav5":"Contact","f1":"Designed and built end to end","bk":"← ALL WORK","pv":"← PREVIOUS PROJECT","nx":"NEXT PROJECT →","ai0":"AI-ASSISTED DEVELOPMENT","ai1":"Building solo, at the pace of a team","ai2":"This software was designed and built solo, with large language models as a constant copilot. <strong>The domain expertise stays mine: it is what decides whether an answer is right.</strong> AI speeds up the implementation, never the hydraulic judgement.","ai3h":"Claude Code","ai3d":"Pair development with the agent: design, implementation, code review, large-scale refactoring","ai4h":"Model Context Protocol","ai4d":"Project tools and data exposed to the model in a standardised way, so it works on the real context","ai5h":"Verification agents","ai5d":"Security audits and test campaigns run by dedicated agents, alongside development","ai6h":"Living documentation","ai6d":"Project status, technical decisions and a session log kept continuously up to date","kick":"Watershed delineation and hydrological cartography: from the elevation model to the exported parameters","q0":"WHAT THE SOFTWARE DOES","q1":"Five pillars, from raw data to deliverable","q2h":"Fetch the elevation model","q2d":"Automatic download of the DEM over the chosen area — HydroSHEDS for relief already conditioned for hydrology, Copernicus 30 m for computational detail.","q3h":"Delineate the watershed","q3d":"One click on the outlet is enough: the software traces the drainage divide and closes the basin boundary.","q4h":"Map through spatial computation","q4d":"Elevation, slope, hypsometry, ordered drainage network, runoff and erosion indices — every map is computed, not drawn.","q5h":"Compute hydrological parameters","q5d":"Basin morphometry, time of concentration, peak discharges and flood hydrograph, using the profession's formulas.","q6h":"Export into the production chain","q6d":"Shapefile, GeoTIFF, Excel and PDF report: results go straight back into the GIS or the study file.","e13":"DEMONSTRATION","e14":"The software in motion","v1":"<b>A complete delineation, end to end</b>Choosing the area, fetching the elevation model, clicking the outlet, then producing the maps and parameters.","e1":"METHOD","e2":"From raw relief to delineated basin, in one pass","r1":"DESIGN PRINCIPLE","r2":"Any home-made heuristic added to the pipeline creates a regression elsewhere: a basin that works in the Atlas mountains and fails on the Tensift plain. The chain follows a standard hydrological protocol, reproduced step by step and validated against several reference basins.","f1c":"From raw elevation model to ordered network: HydroSHEDS conditioning, breaching, fill, D8, Strahler","e3":"COMPUTED PARAMETERS","e4":"Every formula traced to its source","f2c":"Topological Strahler ordering, hypsometric curve, morphometric indices","t1h":"Morphometry","t1d":"Area, perimeter, Gravelius, Melton, equivalent rectangle","t2h":"Elevation","t2d":"Hypsometry, Wentworth slope classes, long profile, 10-85 % slope","t3h":"Network","t3d":"Strahler orders, bifurcation ratios, drainage density","t4h":"Derived indices","t4d":"TWI, LS, SPI computed on the flow grid","e5":"HYDROLOGICAL CALCULATIONS","e6":"From relief to discharge: time of concentration, peak flow, hydrograph","u1h":"Time of concentration","u1d":"Four formulas computed in parallel: Kirpich, Giandotti, Ventura, Bransby-Williams","u2h":"Peak discharge","u2d":"Rational method, SCS-CN and Mallet-Gauthier (Morocco-specific)","u3h":"SCS unit hydrograph","u3d":"Full discharge curve over time, dedicated Excel export","u4h":"IDF curves","u4d":"Montana, Talbot, Sherman — six return periods","e7":"STACK","e10":"INTERFACE","e11":"The software running","e12":"Click a screenshot to enlarge.","g-fa1":"<b>Delineated watershed</b><i>Boundary computed from the outlet, relief coloured by altitude over satellite imagery</i>","g-fa2":"<b>Drainage network and long profile</b><i>Full network extracted from the elevation model, main thalweg profile with slopes and relief</i>","g-fa3":"<b>Geomorphological analysis</b><i>Hypsometric curve, Strahler integral and interpretation of the evolution stage</i>","g-fa4":"<b>Time of concentration</b><i>Four formulas computed in parallel: Kirpich, Giandotti, Ventura, Bransby-Williams</i>","e8":"WHAT THE SOFTWARE COMPUTES","e9":"A watershed, layer by layer","n3":"Toggle the layers on and off to see what a delineated basin is made of.","g1":"Relief","g2":"Rainfall &amp; runoff","g3":"Basin boundary","g4":"Drainage network","g5":"Outlet","f3c":"The boundary follows the drainage divide; everything falling inside converges on the outlet"};
+const I18N={"nav1":"Expertise","nav2":"Work","nav3":"Toolbox","nav4":"Background","nav5":"Contact","f1":"Designed and built end to end","bk":"← ALL WORK","pv":"← PREVIOUS PROJECT","nx":"NEXT PROJECT →","ai0":"AI-ASSISTED DEVELOPMENT","ai1":"Building solo, at the pace of a team","ai2":"This software was designed and built solo, with large language models as a constant copilot. <strong>The domain expertise stays mine: it is what decides whether an answer is right.</strong> AI speeds up the implementation, never the hydraulic judgement.","ai3h":"Claude Code","ai3d":"Pair development with the agent: design, implementation, code review, large-scale refactoring","ai4h":"Model Context Protocol","ai4d":"Project tools and data exposed to the model in a standardised way, so it works on the real context","ai5h":"Verification agents","ai5d":"Security audits and test campaigns run by dedicated agents, alongside development","ai6h":"Living documentation","ai6d":"Project status, technical decisions and a session log kept continuously up to date","kick":"Watershed delineation and hydrological cartography: from the elevation model to the exported parameters","q0":"WHAT THE SOFTWARE DOES","q1":"Four pillars, from raw data to deliverable","q2h":"Fetch the elevation model","q2d":"Automatic download of the DEM over the chosen area — HydroSHEDS for relief already conditioned for hydrology, Copernicus 30 m for computational detail.","q3h":"Delineate the watershed","q3d":"One click on the outlet is enough: the software traces the drainage divide and closes the basin boundary.","q4h":"Map through spatial computation","q4d":"Elevation, slope, hypsometry, ordered drainage network, runoff and erosion indices — every map is computed, not drawn.","q5h":"Compute and export the parameters","q5d":"Morphometry, time of concentration, peak discharges and flood hydrograph, exportable as Shapefile, GeoTIFF, Excel and PDF report.","e13":"DEMONSTRATION","e14":"The software in motion","v1":"<b>A complete delineation, end to end</b>Choosing the area, fetching the elevation model, clicking the outlet, then producing the maps and parameters.","e1":"METHOD","e2":"From raw relief to delineated basin, in one pass","r1":"DESIGN PRINCIPLE","r2":"Any home-made heuristic added to the pipeline creates a regression elsewhere: a basin that works in the Atlas mountains and fails on the Tensift plain. The chain follows a standard hydrological protocol, reproduced step by step and validated against several reference basins.","f1c":"From raw elevation model to ordered network: HydroSHEDS conditioning, breaching, fill, D8, Strahler","e3":"COMPUTED PARAMETERS","e4":"Every formula traced to its source","f2c":"Topological Strahler ordering, hypsometric curve, morphometric indices","t1h":"Morphometry","t1d":"Area, perimeter, Gravelius, Melton, equivalent rectangle","t2h":"Elevation","t2d":"Hypsometry, Wentworth slope classes, long profile, 10-85 % slope","t3h":"Network","t3d":"Strahler orders, bifurcation ratios, drainage density","t4h":"Derived indices","t4d":"TWI, LS, SPI computed on the flow grid","e5":"HYDROLOGICAL CALCULATIONS","e6":"From relief to discharge: time of concentration, peak flow, hydrograph","u1h":"Time of concentration","u1d":"Four formulas computed in parallel: Kirpich, Giandotti, Ventura, Bransby-Williams","u2h":"Peak discharge","u2d":"Rational method, SCS-CN and Mallet-Gauthier (Morocco-specific)","u3h":"SCS unit hydrograph","u3d":"Full discharge curve over time, dedicated Excel export","u4h":"IDF curves","u4d":"Montana, Talbot, Sherman — six return periods","e7":"STACK","e10":"INTERFACE","e11":"The software running","e12":"Click a screenshot to enlarge.","g-fa1":"<b>Delineated watershed</b><i>Boundary computed from the outlet, relief coloured by altitude over satellite imagery</i>","g-fa2":"<b>Drainage network and long profile</b><i>Full network extracted from the elevation model, main thalweg profile with slopes and relief</i>","g-fa3":"<b>Geomorphological analysis</b><i>Hypsometric curve, Strahler integral and interpretation of the evolution stage</i>","g-fa4":"<b>Time of concentration</b><i>Four formulas computed in parallel: Kirpich, Giandotti, Ventura, Bransby-Williams</i>","e8":"WHAT THE SOFTWARE COMPUTES","e9":"A watershed, layer by layer","n3":"Toggle the layers on and off to see what a delineated basin is made of.","g1":"Relief","g2":"Rainfall &amp; runoff","g3":"Basin boundary","g4":"Drainage network","g5":"Outlet","f3c":"The boundary follows the drainage divide; everything falling inside converges on the outlet"};
 const FR={};
 document.querySelectorAll('[data-i18n]').forEach(e=>FR[e.dataset.i18n]=e.innerHTML);
 function setLang(l){

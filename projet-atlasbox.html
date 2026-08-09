@@ -70,8 +70,13 @@ margin-bottom:34px;min-height:520px;display:flex;align-items:flex-end;isolation:
 .car{position:absolute;inset:0;z-index:0;overflow:hidden}
 .car-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.22,.7,.3,1);will-change:transform}
 .car-s{flex:0 0 50%;height:100%;padding:0 1px;box-sizing:border-box}
+.car[data-per="4"] .car-s{flex-basis:25%}
+.car[data-per="3"] .car-s{flex-basis:33.3333%}
 .car-s img{width:100%;height:100%;object-fit:cover;object-position:center top;
 filter:saturate(.95) contrast(1.02);opacity:.9}
+/* écrans mobiles : la capture entière, jamais rognée */
+.car.contain .car-s{padding:26px 10px 0}
+.car.contain .car-s img{object-fit:contain;object-position:center top;opacity:.96;filter:none}
 .car-b{position:absolute;top:50%;transform:translateY(-50%);z-index:4;
 width:48px;height:48px;border-radius:50%;border:1px solid var(--line-2);
 background:color-mix(in srgb,var(--bg) 66%,transparent);backdrop-filter:blur(10px);
@@ -81,7 +86,9 @@ cursor:pointer;display:grid;place-items:center;opacity:.6;transition:.25s}
 background:color-mix(in srgb,var(--bg) 84%,transparent)}
 .car-b:focus-visible{outline:2px solid var(--ac);outline-offset:3px;opacity:1}
 .car-b.prev{left:20px}.car-b.next{right:20px}
-@media(max-width:700px){.car-s{flex:0 0 100%}.car-b{width:40px;height:40px;font-size:22px}
+@media(max-width:980px){.car[data-per="4"] .car-s{flex-basis:50%}}
+@media(max-width:700px){.car-s,.car[data-per="4"] .car-s,.car[data-per="3"] .car-s{flex-basis:100%}
+.car-b{width:40px;height:40px;font-size:22px}
 .car-b.prev{left:10px}.car-b.next{right:10px}}
 .pbanner::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
 background:linear-gradient(180deg,
@@ -349,7 +356,7 @@ body{--ac:#9B8CE8}</style>
 <button class="burger" onclick="document.getElementById('navlinks').classList.toggle('open')" aria-label="Menu">☰</button>
 </div></nav>
 <header class="phead shot-bg">
-<div class="car"><div class="car-track"><div class="car-s"><img data-img="ab1" alt=""></div><div class="car-s"><img data-img="ab3" alt=""></div><div class="car-s"><img data-img="ab2" alt=""></div><div class="car-s"><img data-img="ab4" alt=""></div></div></div><button class="car-b prev" type="button" aria-label="Captures précédentes">&#8249;</button><button class="car-b next" type="button" aria-label="Captures suivantes">&#8250;</button>
+<div class="car" data-per="2"><div class="car-track"><div class="car-s"><img data-img="ab1" alt=""></div><div class="car-s"><img data-img="ab3" alt=""></div><div class="car-s"><img data-img="ab2" alt=""></div><div class="car-s"><img data-img="ab4" alt=""></div></div></div><button class="car-b prev" type="button" aria-label="Captures précédentes">&#8249;</button><button class="car-b next" type="button" aria-label="Captures suivantes">&#8250;</button>
 <div class="wrap">
 <a href="index.html#projets" class="back" data-i18n="bk">← TOUTES LES RÉALISATIONS</a>
 <div class="phead-in">
@@ -493,34 +500,52 @@ document.querySelectorAll('img[data-img]').forEach(function(e){
   if (d) e.src = d;
 });
 
-/* Carrousel : deux captures visibles à la fois sur écran large,
-   une seule en dessous de 700 px. Le pas est déduit de la largeur
-   réelle d'une diapositive, donc il suit le point de rupture CSS. */
+/* Carrousel circulaire. La bande de captures est dupliquée : en fin de
+   liste on continue sur la copie, puis on revient au début sans
+   transition. Le défilement paraît donc continu, chaque capture passe
+   à son tour et aucune n'est sautée. */
 document.querySelectorAll('.car').forEach(function(car){
   var track = car.querySelector('.car-track');
   var host  = car.parentElement;
-  var n = track.children.length, i = 0;
+  var n = track.children.length;
+  if (!n) return;
+  Array.prototype.slice.call(track.children).forEach(function(s){
+    track.appendChild(s.cloneNode(true));
+  });
+  var prev = host.querySelector('.car-b.prev'), next = host.querySelector('.car-b.next');
+  var i = 0, busy = false;
+  var EASE = 'transform .5s cubic-bezier(.22,.7,.3,1)';
+
   function per(){
     var w = track.children[0].offsetWidth;
     return w ? Math.max(1, Math.round(car.clientWidth / w)) : 1;
   }
-  function apply(){
-    var p = per(), max = Math.max(0, n - p);
-    if (i > max) i = max;
-    track.style.transform = 'translateX(-' + (i * (100 / p)) + '%)';
+  function step(){ return 100 / per(); }
+  function place(anim){
+    track.style.transition = anim ? EASE : 'none';
+    track.style.transform = 'translateX(-' + (i * step()) + '%)';
+  }
+  function arrows(){
+    var show = n > per();
+    if (prev) prev.style.display = show ? '' : 'none';
+    if (next) next.style.display = show ? '' : 'none';
+    return show;
   }
   function go(d){
-    var p = per(), max = Math.max(0, n - p);
-    i = i + d;
-    if (i < 0) i = max;
-    if (i > max) i = 0;
-    apply();
+    if (busy || !arrows()) return;
+    busy = true;
+    if (d < 0 && i === 0) { i = n; place(false); void track.offsetWidth; }
+    i += d;
+    place(true);
   }
-  var prev = host.querySelector('.car-b.prev'), next = host.querySelector('.car-b.next');
+  track.addEventListener('transitionend', function(){
+    busy = false;
+    if (i >= n) { i -= n; place(false); }
+  });
   if (prev) prev.addEventListener('click', function(e){ e.preventDefault(); go(-1); });
   if (next) next.addEventListener('click', function(e){ e.preventDefault(); go(1); });
-  addEventListener('resize', apply, {passive:true});
-  apply();
+  addEventListener('resize', function(){ arrows(); place(false); }, {passive:true});
+  arrows(); place(false);
 });
 
 const I18N={"nav1":"Expertise","nav2":"Work","nav3":"Toolbox","nav4":"Background","nav5":"Contact","f1":"Designed and built end to end","bk":"← ALL WORK","pv":"← PREVIOUS PROJECT","nx":"NEXT PROJECT →","ai0":"AI-ASSISTED DEVELOPMENT","ai1":"Building solo, at the pace of a team","ai2":"This software was designed and built solo, with large language models as a constant copilot. <strong>The domain expertise stays mine: it is what decides whether an answer is right.</strong> AI speeds up the implementation, never the hydraulic judgement.","ai3h":"Claude Code","ai3d":"Pair development with the agent: design, implementation, code review, large-scale refactoring","ai4h":"Model Context Protocol","ai4d":"Project tools and data exposed to the model in a standardised way, so it works on the real context","ai5h":"Verification agents","ai5d":"Security audits and test campaigns run by dedicated agents, alongside development","ai6h":"Living documentation","ai6d":"Project status, technical decisions and a session log kept continuously up to date","kick":"Automated extraction of French public environmental data — Windows desktop application","s1":"automated extraction","s2":"of collection per study","s3":"automated tests","s4":"report-ready export formats","e1":"ARCHITECTURE","e2":"One polygon, every source cross-referenced","n1":"Every environmental assessment began with the same chore: open many government portals, download, reformat, cross-check. <strong>Atlas BOX fully automates that step</strong> — the user draws a polygon, the software queries the public sources, cross-references the data and prepares the exports.","f1c":"Aggregation chain: from public APIs to professional exports","t1h":"Polygon extraction","t1d":"Free-hand drawing on the map, multi-layer filtering","t2h":"3D geological engine","t2d":"Borehole logs coupled to the IGN elevation model, Mesh3D rendering","t3h":"Non-blocking multi-thread","t3d":"Thousands of points paginated in the background","t4h":"Automatic reprojection","t4d":"WGS84 ↔ Lambert 93, Pyproj precision","e3":"RELIABILITY","e4":"Software that survives outages it does not control","n2":"Atlas BOX depends on public APIs I do not control. An outage on the government side must not become an outage for the user.","f2c":"Bounded retry, per-host circuit breaker, flagged fallback cache","e5":"INTERFACE","e6":"The software running","e6b":"Click a screenshot to enlarge.","e7":"STACK","e8":"DEMONSTRATION","e9":"The software in motion","v1":"<b>3D terrain and subsurface modelling</b>Surface rebuilt from the elevation model, with boreholes placed below the natural ground.","v2":"<b>Exploring water quality data</b>Querying public sources over an area drawn by hand.","g-ab1":"<b>3D digital elevation model</b><i>Surface rebuilt from the IGN elevation model, coloured by altitude, free navigation</i>","g-ab2":"<b>3D geological model</b><i>Six BSS boreholes and three stratigraphic logs placed under the surface, adjustable vertical exaggeration</i>","g-ab3":"<b>Vigicrues discharge series</b><i>Twenty years of hydrometry with computed indicators: mean flow, QMNA5, low flow, peak flood</i>","g-ab4":"<b>Rainfall and evapotranspiration</b><i>Monthly Copernicus ERA5-Land series at the selected point</i>","g-ab5":"<b>Elevation profile</b><i>24.7 km section sampled on the IGN RGE ALTI elevation model</i>"};
