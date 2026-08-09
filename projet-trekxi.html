@@ -63,6 +63,43 @@ h2{font-size:clamp(31px,4.1vw,50px);margin-bottom:20px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{font-family:var(--f-m);font-size:11.5px;color:var(--tx-3);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4.5px 10px}
 
+/* bandeau mosaïque en tête de la section Réalisations */
+.pbanner{position:relative;border:1px solid var(--line);border-radius:22px;overflow:hidden;
+margin-bottom:34px;min-height:340px;display:flex;align-items:flex-end;isolation:isolate}
+.pb-mosaic{position:absolute;inset:0;z-index:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px}
+.pb-mosaic img{width:100%;height:100%;object-fit:cover;filter:saturate(.72) contrast(1.04);
+opacity:.5;transition:opacity .6s,transform 8s ease-out}
+.pbanner:hover .pb-mosaic img{opacity:.62;transform:scale(1.035)}
+.pbanner::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+background:linear-gradient(180deg,color-mix(in srgb,var(--bg) 48%,transparent) 0%,
+color-mix(in srgb,var(--bg) 76%,transparent) 46%,var(--bg) 100%)}
+.pb-txt{position:relative;z-index:2;padding:56px 44px 40px;max-width:820px}
+.pb-txt .sub{margin-bottom:0}
+@media(max-width:640px){.pbanner{min-height:280px}.pb-txt{padding:36px 24px 28px}}
+
+/* carte Intelligence artificielle, mise en avant dans la boîte à outils */
+.tool.ai{border-color:color-mix(in srgb,var(--violet) 34%,transparent);
+background:linear-gradient(150deg,color-mix(in srgb,var(--violet) 9%,var(--bg-2)),var(--bg-2))}
+.tool.ai h4{color:var(--violet)}
+.tool.ai .chip{border-color:color-mix(in srgb,var(--violet) 26%,transparent)}
+
+/* piliers d'un logiciel : ce qu'il permet de faire */
+.plrs{display:grid;grid-template-columns:repeat(auto-fit,minmax(288px,1fr));gap:1px;
+background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.plr{background:var(--bg-2);padding:28px 26px;display:flex;gap:16px;align-items:flex-start;transition:.3s}
+.plr:hover{background:var(--bg-3)}
+.pn{font-family:var(--f-m);font-size:12px;color:var(--ac);flex-shrink:0;padding-top:3px;letter-spacing:.04em}
+.pt{font-family:var(--f-d);font-size:17.5px;font-weight:600;letter-spacing:-.02em;margin-bottom:7px;line-height:1.25}
+.pd{font-size:14.5px;color:var(--tx-2);line-height:1.58}
+
+/* vidéos de démonstration */
+.vfig{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--bg-2);margin-bottom:22px}
+.vfig video{width:100%;display:block;background:#000}
+.vfig figcaption{padding:15px 20px;font-size:14px;color:var(--tx-3);border-top:1px solid var(--line);line-height:1.55}
+.vfig figcaption b{color:var(--tx-2);font-weight:500;display:block;margin-bottom:3px;font-family:var(--f-d);font-size:15px}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(440px,1fr));gap:20px}
+@media(max-width:960px){.vgrid{grid-template-columns:1fr}}
+
 .pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:22px}
 .pcard{background:var(--bg-2);border:1px solid var(--line);border-radius:18px;padding:34px 32px;display:flex;flex-direction:column;transition:.32s;position:relative;overflow:hidden}
 .pcard::before{content:'';position:absolute;inset:0 0 auto 0;height:2px;background:var(--ac);opacity:0;transition:.32s}
@@ -188,6 +225,73 @@ section{padding:76px 0}.phead{padding:124px 0 48px}.contact{padding:48px 24px}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
+/* ==================================================================
+   MODE CLAIR — mêmes contenus, palette adaptée au fond clair.
+   Les figures SVG portent des couleurs en dur : elles sont réécrites
+   ici par sélecteurs d'attribut (les attributs de présentation
+   perdent toujours face à une règle CSS).
+   ================================================================== */
+body.light{
+--bg:#F4F7FB;--bg-2:#FFFFFF;--bg-3:#EDF2F8;--line:#DCE3ED;--line-2:#C3CEDE;
+--tx:#0F1B2D;--tx-2:#42546C;--tx-3:#5F7089;
+--aqua:#0A7466;--blue:#1D4ED8;--violet:#5B49BE;--cyan:#046A94}
+body.light ::selection{background:var(--aqua);color:#fff}
+body.light nav.stuck{background:rgba(244,247,251,.88)}
+body.light .lang button.on{background:var(--aqua);color:#fff}
+body.light .btn-p{color:#fff}
+body.light .hero-bg{opacity:.3}
+body.light .hero-bg::after{background:radial-gradient(ellipse 70% 60% at 30% 45%,transparent 0%,var(--bg) 78%)}
+body.light .portrait{box-shadow:0 14px 34px rgba(15,27,45,.16)}
+body.light #lb{background:rgba(240,244,249,.96)}
+body.light .pcard,body.light .exp,body.light .tool,body.light .stat,body.light .cert,body.light .shot,body.light .vfig{
+box-shadow:0 1px 2px rgba(15,27,45,.05),0 8px 24px -14px rgba(15,27,45,.14)}
+body.light .pb-mosaic img{opacity:.34;filter:saturate(.7) contrast(1.02)}
+body.light .pbanner:hover .pb-mosaic img{opacity:.44}
+
+/* --- figures SVG : surfaces sombres --- */
+body.light [fill="#070A10"]{fill:#EBF0F7}
+body.light [fill="#0C111A"],body.light .card{fill:#FFFFFF}
+body.light [fill="#111826"]{fill:#F3F7FC}
+body.light [fill="#0E1723"],body.light [fill="#0B121C"],body.light [fill="#101B29"]{fill:#E3EAF4}
+body.light [fill="#141F2E"],body.light [fill="#0D1622"],body.light [fill="#0A1119"]{fill:#F0F4FA}
+body.light [fill="#1B2A3D"]{fill:#E1E9F4}
+body.light [fill="#1E2E42"]{fill:#D3DFEC}
+body.light [fill="#24405E"]{fill:#B9CCE0}
+body.light [fill="#16283C"]{fill:#CBD9E8}
+body.light [fill="#0F2A26"]{fill:#D3EFE9}
+body.light [stop-color="#24405E"]{stop-color:#BCCEE1}
+body.light [stop-color="#16283C"]{stop-color:#CFDCEA}
+
+/* --- figures SVG : traits, grilles, cadres --- */
+body.light .card{stroke:#D3DCE8}
+body.light .grid{stroke:#DFE6EF}
+body.light [stroke="#1B2536"],body.light [stroke="#131C29"],body.light [stroke="#16202F"],
+body.light [stroke="#182636"],body.light [stroke="#18283D"]{stroke:#DCE3ED}
+body.light [stroke="#243549"],body.light [stroke="#233448"],body.light [stroke="#28344A"],
+body.light [stroke="#2A3B52"],body.light [stroke="#2A3B57"]{stroke:#B9C6D8}
+body.light [stroke="#2E4A68"],body.light [stroke="#3A5878"],body.light [stroke="#3B5578"]{stroke:#8FA6C0}
+body.light [fill="#2A3B57"]{fill:#B9C6D8}
+
+/* --- figures SVG : textes --- */
+body.light .t{fill:#42546C}
+body.light .th{fill:#0F1B2D}
+body.light .tm{fill:#6B7C93}
+body.light .wl{fill:#42546C}
+body.light .ws{fill:#6B7C93}
+body.light [fill="#E8EEF7"]{fill:#0F1B2D}
+body.light [fill="#98A5BA"]{fill:#42546C}
+body.light [fill="#63718A"],body.light [fill="#8B98AD"]{fill:#6B7C93}
+body.light [fill="#7FA8CE"]{fill:#35618F}
+
+/* --- figures SVG : accents à assombrir pour rester lisibles --- */
+body.light .s-t{fill:#FFFFFF;stroke:#C3CEDE}
+body.light .s-l{fill:#E8EEF6;stroke:#CDD8E6}
+body.light .s-r{fill:#DFE7F1;stroke:#CDD8E6}
+body.light .slab:hover .s-t{fill:#F2F7FD}
+body.light .s-cv{fill:#FFFFFF}
+body.light .cvslab:hover .s-cv{fill:#E4F6F3}
+body.light .tg.on{background:color-mix(in srgb,var(--blue) 12%,transparent)}
+
 body{--ac:#2DD4BF}</style>
 </head>
 <body>
@@ -201,6 +305,7 @@ body{--ac:#2DD4BF}</style>
 <a href="index.html#contact" data-i18n="nav5">Contact</a>
 </div>
 <div class="lang"><button id="bfr" class="on" onclick="setLang('fr')">FR</button><button id="ben" onclick="setLang('en')">EN</button></div>
+<div class="lang theme"><button id="bdark" class="on" onclick="setTheme('dark')" aria-label="Mode sombre" title="Mode sombre">&#9789;</button><button id="blight" onclick="setTheme('light')" aria-label="Mode clair" title="Mode clair">&#9788;</button></div>
 <button class="burger" onclick="document.getElementById('navlinks').classList.toggle('open')" aria-label="Menu">☰</button>
 </div></nav>
 <header class="phead"><div class="wrap">
@@ -292,6 +397,13 @@ function setLang(l){
   document.getElementById('ben').classList.toggle('on',l==='en');
   try{localStorage.setItem('lang',l)}catch(e){}
 }
+function setTheme(t){
+  document.body.classList.toggle('light',t==='light');
+  document.getElementById('bdark').classList.toggle('on',t!=='light');
+  document.getElementById('blight').classList.toggle('on',t==='light');
+  try{localStorage.setItem('theme',t)}catch(e){}
+}
+try{if(localStorage.getItem('theme')==='light')setTheme('light')}catch(e){}
 const nav=document.getElementById('nav');
 addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>40),{passive:true});
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.06,rootMargin:'0px 0px -30px'});
